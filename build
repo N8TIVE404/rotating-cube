@@ -1,0 +1,9 @@
+#! /bin/bash
+
+echo "Building binaries..."
+
+gcc -Wall -Wextra -Werror -fsanitize=address ./src/*.c -I./include -o ./app -lglfw -lm -lc
+
+echo "Built binaries successfully"
+
+echo "Done!"
