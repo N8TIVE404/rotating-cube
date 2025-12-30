@@ -1,67 +1,69 @@
 # include <glad/glad.h>
 # include <GLFW/glfw3.h>
 # include <shaders.h>
+# include <textures.h>
 # include <cglm/cglm.h>
 # include <camera.h>
+# include <render.h>
 
 // Variables for the viewport width and height
 int width, height;
 
 // Cube co-ordinates
 float vertices[] = {
-    // Front face (Z = +0.5) - Red
-    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
+    // Front face (Z = +0.5)
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-    // Back face (Z = -0.5) - Green
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+    // Back face (Z = -0.5)
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
 
-     0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 
-    // Left face (X = -0.5) - Blue
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
+    // Left face (X = -0.5)
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 
-    // Right face (X = +0.5) - Yellow
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,
+    // Right face (X = +0.5)
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-    // Bottom face (Y = -0.5) - Cyan
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
+    // Bottom face (Y = -0.5)
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 
-     0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-    // Top face (Y = +0.5) - Magenta
-    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,
+    // Top face (Y = +0.5)
+    -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 0.0f
 };
 
 Camera cam;     // Scene camera
@@ -164,26 +166,66 @@ main(void){
         exit(EXIT_FAILURE);
     }
 
+    glfwGetFramebufferSize(window, &width, &height);
+
     // Define the position, up and front vectors and the field of view needed to create the camera
     vec3 cameraPosition = {0.0f, 3.0f, 2.0f};
     vec3 cameraUp = {0.0f, 1.0f, 0.0f};
     vec3 cameraFront = {0.0f, 0.0f, -1.0f};
-    float fieldOfView = 45.0f;
 
     // Create the camera and assign the navigation, resizing and scrolling functions for scene and window manipulation
-    cam = initialize_camera(cameraPosition, cameraFront, cameraUp, fieldOfView);
+    cam = initialize_camera(cameraPosition, cameraFront, cameraUp, 45.0f);
     cam.nav = mouse_callback;
     cam.resize = framebuffer_resize;
     cam.scroll = scroll_callback;
-    cam.nav = mouse_callback;
 
     glfwSetScrollCallback(window, cam.scroll);
     glfwSetFramebufferSizeCallback(window, cam.resize);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, cam.nav);
 
-    // Render the scene
-    render(window, &width, &height, vertices, sizeof(vertices), &cam);
+    float lastFrame = 0.0f;
+
+    glEnable(GL_DEPTH_TEST);
+
+    Position pos;
+    vec3 scale = {0.7f, 0.7f, 0.7f};
+    glm_vec3_copy(scale, pos.scale);
+    vec3 axis = {1.0f, 1.0f, 0.0f};
+    glm_vec3_copy(axis, pos.axis);
+    pos.angle = 0.0f;
+
+    Mesh cube = {.first_vertex = 0, .max_vertex = 36, .vertexElements = 3, .textureElements = 2, .stride = 5 * sizeof(float)};
+    Material wooden;
+    wooden.shaderProgram = shader_program("assets/shaders/shader.vert", "assets/shaders/shader.frag");
+    TextureData tex = load_texture("assets/textures/textureimage.jpg", GL_RGB, GL_TEXTURE0);
+    wooden.texture = tex.texture;
+
+    verticesData vd = {.size = sizeof(vertices), .data = vertices, .count = 36};
+    Renderer cubeRenderer = init_renderer(vd, GL_ARRAY_BUFFER, cube);
+
+    GLuint mvpLoc = glGetUniformLocation(wooden.shaderProgram, "glMvp");
+    GLuint tex0ID = glGetUniformLocation(wooden.shaderProgram, "tex0");
+    glUniform1i(tex0ID, 0);
+
+    while(!glfwWindowShouldClose(window)){
+        float currentFrame = glfwGetTime();
+        cam.deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        mat4 mvp;
+        glClearColor(0.6f, 0.2f, 0.4f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        process_input(window, &cam);
+
+        draw_mesh(&cam, &pos, &cubeRenderer, &wooden, cube, mvp, mvpLoc, width, height);
+        pos.angle += 1.0f;
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    cleanUp(&cubeRenderer, &tex, &wooden);
 
     // Terminate GLFW session
     glfwTerminate();

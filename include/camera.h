@@ -17,7 +17,5 @@ typedef struct Camera{
 } Camera;
 
 Camera initialize_camera(vec3, vec3, vec3, float);
-void render(GLFWwindow*,int*, int*, float*, size_t, Camera*);
-void process_input(GLFWwindow*, Camera*);
 
 # endif
