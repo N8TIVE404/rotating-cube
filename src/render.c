@@ -58,26 +58,54 @@ Renderer init_renderer(verticesData vd, indicesData id, Mesh mesh){
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(0, mesh.vertexElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)0);
-    glVertexAttribPointer(1, mesh.textureElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)(mesh.vertexElements * sizeof(float)));
+    glVertexAttribPointer(1, mesh.normalElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)(mesh.vertexElements * sizeof(float)));
 
     glBindVertexArray(0);
 
     return r;
 }
 
+Light init_light(vec3 *position, vec3 *color, float intensity, LightType type){
+    Light l;
+    glm_vec3_copy(*position, l.position);
+    glm_vec3_copy(*color, l.color);
+    l.intensity = intensity;
+    l.type = type;
+    return l;
+}
+
+void render_light(Camera *cam, Position *pos, Renderer *r, Light light, mat4 lightMvp, Mesh mesh, GLuint shaderProgram, GLuint lightMvpLoc, GLuint colorLoc, int width, int height){
+    GLuint lightVao;
+    glGenVertexArrays(1, &lightVao);
+    glBindVertexArray(lightVao);
+    glBindBuffer(GL_ARRAY_BUFFER, r -> vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r -> ebo);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, mesh.vertexElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)0);
+
+    glUseProgram(shaderProgram);
+    glm_vec3_copy(light.position, pos -> location);
+    glUniform3fv(colorLoc, 1, light.color);
+    glUniformMatrix4fv(lightMvpLoc, 1, GL_FALSE, calculate_mvp(cam, pos, lightMvp, width, height));
+    glDrawElements(GL_TRIANGLES, mesh.maxIndex, GL_UNSIGNED_INT, (void*)0);
+    glBindVertexArray(0);
+}
+
 // Draw the triangles
 void draw_mesh(Camera *cam, Position *pos, Renderer *r, Material *mat, Mesh mesh, mat4 mvp, vec3 location, GLuint mvpLoc, int width, int height){
     glUseProgram(mat -> shaderProgram);
     glBindVertexArray(r -> vao);
-    glBindTexture(GL_TEXTURE_2D, mat -> texture);
+//    glBindTexture(GL_TEXTURE_2D, mat -> texture);
     glm_vec3_copy(location, pos -> location);
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, calculate_mvp(cam, pos, mvp, width, height));
-    glDrawElements(GL_TRIANGLES, mesh.maxIndex, GL_UNSIGNED_INT, (void *)(mesh.firstIndex * sizeof(uint32_t)));
+    glDrawElements(GL_TRIANGLES, mesh.maxIndex, GL_UNSIGNED_INT, (void *)0);
 }
 
 
 void cleanUp(Renderer *r, TextureData *tex, Material *mat){
     glDeleteBuffers(1, &(r -> vbo));
+    glDeleteBuffers(1, &(r -> ebo));
     glDeleteVertexArrays(1, &(r -> vao));
     destroy_textures(*tex);
     glDeleteProgram(mat -> shaderProgram);

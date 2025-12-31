@@ -11,110 +11,50 @@ int width, height;
 
 // Cube co-ordinates
 float cubeVertices[] = {
-    // Front face (+Z)
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   // 0
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // 1
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   // 2
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,   // 3
+    // positions          // normals           // texture coords
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f, // 0
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f, // 1
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f, // 2
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f, // 3
 
-    // Back face (-Z)
-    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   // 4
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   // 5
-     0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   // 6
-     0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   // 7
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f, // 4
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f, // 5
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f, // 6
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f, // 7
 
-    // Left face (-X)
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   // 8
-    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // 9
-    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   // 10
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   // 11
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f, // 8
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f, // 9
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f, // 10
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f, // 11
 
-    // Right face (+X)
-     0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   // 12
-     0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   // 13
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   // 14
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // 15
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, // 12
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, // 13
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f, // 14
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f, // 15
 
-    // Bottom face (-Y)
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   // 16
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,   // 17
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // 18
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   // 19
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f, // 16
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f, // 17
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f, // 18
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f, // 19
 
-    // Top face (+Y)
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   // 20
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,   // 21
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   // 22
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f    // 23
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f, // 20
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f, // 21
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f, // 22
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f  // 23
 };
 
 unsigned int cubeIndices[] = {
-    0, 1, 2,   2, 3, 0,       // Front
-    4, 5, 6,   6, 7, 4,       // Back
-    8, 9,10,  10,11, 8,       // Left
-   12,13,14,  14,15,12,       // Right
-   16,17,18,  18,19,16,       // Bottom
-   20,21,22,  22,23,20        // Top
+    0, 1, 2,     2, 3, 0,    // Back Face
+    4, 5, 6,     6, 7, 4,    // Front Face
+    8, 9, 10,   10, 11, 8,   // Left Face
+    12, 13, 14, 14, 15, 12,  // Right Face
+    16, 17, 18, 18, 19, 16,  // Bottom Face
+    20, 21, 22, 22, 23, 20   // Top Face
 };
 
 float cubeLocation[][3] = {
-    {0.0f,  0.0f,  0.0f},
-    {2.0f,  5.0f, -15.0f},
-    { 1.5f,  2.0f, -2.5f},
-    { 1.5f,  0.2f, -1.5f},
-    {-1.3f,  1.0f, -1.5f}
-};
-
-
-float prismVertices[] = {
-    // Front triangle (+Z)
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   // 0
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // 1
-     0.0f,  0.5f,  0.5f,  0.5f, 1.0f,   // 2
-
-    // Back triangle (-Z)
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   // 3
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   // 4
-     0.0f,  0.5f, -0.5f,  0.5f, 1.0f,   // 5
-
-    // Bottom face
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   // 6
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,   // 7
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // 8
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   // 9
-
-    // Left slanted face
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   //10
-    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   //11
-     0.0f,  0.5f,  0.5f,  1.0f, 1.0f,   //12
-     0.0f,  0.5f, -0.5f,  0.0f, 1.0f,   //13
-
-    // Right slanted face
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   //14
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   //15
-     0.0f,  0.5f, -0.5f,  1.0f, 1.0f,   //16
-     0.0f,  0.5f,  0.5f,  0.0f, 1.0f    //17
-};
-
-unsigned int prismIndices[] = {
-    // Front
-    0,1,2,
-    // Back
-    3,4,5,
-    // Bottom
-    6,7,8,  8,9,6,
-    // Left
-   10,11,12, 12,13,10,
-    // Right
-   14,15,16, 16,17,14
-};
-
-float prismLocation[][3] = {
-    {-1.5f, -2.2f, -2.5f},
-    {-3.8f, -2.0f, -12.3f},
-    { 2.4f, -0.4f, -3.5f},
-    {-1.7f,  3.0f, -7.5f},
-    { 1.3f, -2.0f, -2.5f}
+    {1.0f,  -1.0f,  2.0f},
+    {0.0f,  -2.0f, 2.0f},
 };
 
 Camera cam;     // Scene camera
@@ -220,7 +160,7 @@ main(void){
     glfwGetFramebufferSize(window, &width, &height);
 
     // Define the position, up and front vectors and the field of view needed to create the camera
-    vec3 cameraPosition = {0.0f, 0.0f, 2.0f};
+    vec3 cameraPosition = {0.0f, 0.0f, 3.0f};
     vec3 cameraUp = {0.0f, 1.0f, 0.0f};
     vec3 cameraFront = {0.0f, 0.0f, -1.0f};
 
@@ -241,31 +181,49 @@ main(void){
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     Position pos;
-    vec3 scale = {0.7f, 0.7f, 0.7f};
+    vec3 scale = {1.0f, 1.0f, 1.0f};
     glm_vec3_copy(scale, pos.scale);
     vec3 axis = {1.0f, 1.0f, 0.0f};
     glm_vec3_copy(axis, pos.axis);
     pos.angle = 0.0f;
 
-    Mesh cube = {.firstVertex = 0, .maxVertex = 8, .vertexElements = 3, .textureElements = 2, .stride = 5 * sizeof(float), .maxIndex = 36, .firstIndex = 0};
-    Mesh prism = {.firstVertex = 0, .maxVertex = 24, .vertexElements = 3, .textureElements = 2, .stride = 5 * sizeof(float), .maxIndex = 24,.firstIndex = 0};
+    Mesh cube = {.firstVertex = 0, .maxVertex = 24, .vertexElements = 3, .normalElements = 3, .textureElements = 2, .stride = 8 * sizeof(float), .maxIndex = 36, .firstIndex = 0};
 
     Material wooden;
     wooden.shaderProgram = shader_program("assets/shaders/shader.vert", "assets/shaders/shader.frag");
+    GLuint lightShader = shader_program("assets/shaders/light.vert", "assets/shaders/light.frag");
+
     TextureData tex = load_texture("assets/textures/textureimage.jpg", GL_RGB, GL_TEXTURE0);
     wooden.texture = tex.texture;
 
     verticesData cubeData = {.size = sizeof(cubeVertices), .data = cubeVertices, .count = 12};
-    verticesData prismData = {.size = sizeof(prismVertices), .data = prismVertices, .count = 24};
     indicesData cubeIndicesData = {.size = sizeof(cubeIndices), .data = cubeIndices, .count = 36};
-    indicesData prismIndicesData = {.size = sizeof(prismIndices), .data = prismIndices, .count = 24};
 
     Renderer cubeRenderer = init_renderer(cubeData, cubeIndicesData, cube);
-    Renderer prismRenderer = init_renderer(prismData, prismIndicesData, prism);
 
+    vec3 lightColor = {1.0f, 1.0f, 1.0f};
+    Position lightPos;
+    lightPos.angle = 20.0f;
+    vec3 lightScale = {0.3, 0.3f, 0.3f};
+    glm_vec3_copy(lightScale, lightPos.scale);
+    vec3 lightAxis = {1.0f, 1.0f, 0.0f};
+    glm_vec3_copy(lightAxis, lightPos.axis);
+
+    Light light = init_light(&cubeLocation[0], &lightColor, 1.0f, POINT);
+
+    glUseProgram(wooden.shaderProgram);
     GLuint mvpLoc = glGetUniformLocation(wooden.shaderProgram, "glMvp");
-    GLuint tex0ID = glGetUniformLocation(wooden.shaderProgram, "tex0");
-    glUniform1i(tex0ID, 0);
+    GLuint glObjectColor = glGetUniformLocation(wooden.shaderProgram, "glObjectColor");
+    GLuint glLightColor = glGetUniformLocation(wooden.shaderProgram, "glLightColor");
+    GLuint glLightSource = glGetUniformLocation(wooden.shaderProgram, "glLightSource");
+    GLuint glModel = glGetUniformLocation(wooden.shaderProgram, "glModel");
+    GLuint glViewerPosition = glGetUniformLocation(wooden.shaderProgram, "glViewerPosition");
+
+    vec3 objectColor = {1.0f, 0.5f, 0.31f};
+
+    glUseProgram(lightShader);
+    GLuint lightMvpLoc = glGetUniformLocation(lightShader, "glMvp");
+    GLuint colorLocLight = glGetUniformLocation(lightShader, "glColor");
 
     while(!glfwWindowShouldClose(window)){
         float currentFrame = glfwGetTime();
@@ -273,16 +231,19 @@ main(void){
         lastFrame = currentFrame;
 
         mat4 mvp;
-        glClearColor(1.0f, 0.5f, 0.31f, 1.0f);
+        mat4 lightMvp;
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         process_input(window, &cam);
-
-        for(int i = 0; i < 5; i++){
-            draw_mesh(&cam, &pos, &cubeRenderer, &wooden, cube, mvp, cubeLocation[i], mvpLoc, width, height);
-            draw_mesh(&cam, &pos, &prismRenderer, &wooden, prism, mvp, prismLocation[i], mvpLoc, width, height);
-            pos.angle += i * 0.02f;
-        }
-
+        render_light(&cam, &lightPos, &cubeRenderer, light, lightMvp, cube, lightShader, lightMvpLoc, colorLocLight, width, height);
+        
+        glUseProgram(wooden.shaderProgram);
+        glUniform3fv(glLightSource, 1, light.position);
+        glUniform3fv(glObjectColor, 1, objectColor);
+        glUniform3fv(glLightColor, 1, lightColor);
+        glUniformMatrix4fv(glModel, 1, GL_FALSE, (float*)(pos.model));
+        glUniform3fv(glViewerPosition, 1, cam.position);
+        draw_mesh(&cam, &pos, &cubeRenderer, &wooden, cube, mvp, cubeLocation[1], mvpLoc, width, height);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

@@ -8,6 +8,10 @@
 struct Camera;
 struct TextureData;
 
+typedef enum LightType{
+    POINT, DIRECTIONAL, SPOT, TYPE_COUNT
+} LightType;
+
 typedef struct Position{
     vec3 scale, axis, location;
     mat4 model, view, projection;
@@ -34,6 +38,7 @@ typedef struct Mesh{
     size_t firstIndex;
     size_t maxIndex;
     int vertexElements;
+    int normalElements;
     int textureElements;
 } Mesh;
 
@@ -48,6 +53,18 @@ typedef struct Renderer{
     GLuint ebo;
 } Renderer;
 
+typedef struct Light{
+    LightType type;
+    vec3 position;
+    vec3 color;
+    vec3 direction;
+    float intensity;
+} Light;
+
+Light init_light(vec3*, vec3*, float, LightType);
+
+void render_light(struct Camera*, Position*, Renderer*, Light, mat4, Mesh, GLuint, GLuint, GLuint, int, int);
+
 // Display the scene
 void render(GLFWwindow*, struct Camera*, Position*, float*, GLuint);
 
@@ -58,7 +75,7 @@ void cleanUp(Renderer*, struct TextureData*, Material*);
 
 Renderer init_renderer(verticesData, indicesData, Mesh);
 
-void draw_mesh(struct Camera *cam, Position *pos, Renderer*, Material*, Mesh, mat4, vec3, GLuint, int, int);
+void draw_mesh(struct Camera *, Position *, Renderer*, Material*, Mesh, mat4, vec3, GLuint, int, int);
 
 void calculate_model(Position*);
 
