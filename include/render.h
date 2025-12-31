@@ -9,7 +9,7 @@ struct Camera;
 struct TextureData;
 
 typedef struct Position{
-    vec3 scale, axis;
+    vec3 scale, axis, location;
     mat4 model, view, projection;
     float angle;
 } Position;
@@ -20,10 +20,19 @@ typedef struct verticesData{
     int count;
 } verticesData;
 
+typedef struct indicesData{
+    unsigned int *data;
+    GLenum type;
+    size_t size;
+    int count;
+} indicesData;
+
 typedef struct Mesh{
-    size_t first_vertex;
-    size_t max_vertex;
+    size_t firstVertex;
+    size_t maxVertex;
     GLsizei stride;
+    size_t firstIndex;
+    size_t maxIndex;
     int vertexElements;
     int textureElements;
 } Mesh;
@@ -36,6 +45,7 @@ typedef struct Material{
 typedef struct Renderer{
     GLuint vao;
     GLuint vbo;
+    GLuint ebo;
 } Renderer;
 
 // Display the scene
@@ -46,9 +56,9 @@ void process_input(GLFWwindow*, struct Camera*);
 
 void cleanUp(Renderer*, struct TextureData*, Material*);
 
-Renderer init_renderer(verticesData, GLenum, Mesh);
+Renderer init_renderer(verticesData, indicesData, Mesh);
 
-void draw_mesh(struct Camera *cam, Position *pos, Renderer*, Material*, Mesh, mat4, GLuint, int, int);
+void draw_mesh(struct Camera *cam, Position *pos, Renderer*, Material*, Mesh, mat4, vec3, GLuint, int, int);
 
 void calculate_model(Position*);
 

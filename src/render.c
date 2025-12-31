@@ -8,6 +8,7 @@
 // We apply uniform scaling so, the order or scaling vs rotation is not significant
 void calculate_model(Position *pos){
     glm_mat4_identity(pos -> model);
+    glm_translate(pos -> model, pos -> location);
     glm_scale(pos -> model, pos -> scale);
     glm_rotate(pos -> model, glm_rad(pos -> angle), pos -> axis);
 }
@@ -40,20 +41,24 @@ float *calculate_mvp(Camera *cam, Position *pos, mat4 mvp, int width, int height
 
 // A renderer is defined for different meshes
 // It is to be initialized once per mesh is the interface meshes use to interact with OpenGL functionality
-Renderer init_renderer(verticesData vd, GLenum bufferType, Mesh mesh){
+Renderer init_renderer(verticesData vd, indicesData id, Mesh mesh){
     Renderer r;
 
     glGenVertexArrays(1, &r.vao);
     glBindVertexArray(r.vao);
 
     glGenBuffers(1, &r.vbo);
-    glBindBuffer(bufferType, r.vbo);
-    glBufferData(bufferType, vd.size, vd.data, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, r.vbo);
+    glBufferData(GL_ARRAY_BUFFER, vd.size, vd.data, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &r.ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r.ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, id.size, id.data, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(0, mesh.vertexElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)0);
-    glVertexAttribPointer(1, mesh.textureElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, mesh.textureElements, GL_FLOAT, GL_FALSE, mesh.stride, (void*)(mesh.vertexElements * sizeof(float)));
 
     glBindVertexArray(0);
 
@@ -61,12 +66,13 @@ Renderer init_renderer(verticesData vd, GLenum bufferType, Mesh mesh){
 }
 
 // Draw the triangles
-void draw_mesh(Camera *cam, Position *pos, Renderer *r, Material *mat, Mesh mesh, mat4 mvp, GLuint mvpLoc, int width, int height){
+void draw_mesh(Camera *cam, Position *pos, Renderer *r, Material *mat, Mesh mesh, mat4 mvp, vec3 location, GLuint mvpLoc, int width, int height){
     glUseProgram(mat -> shaderProgram);
     glBindVertexArray(r -> vao);
     glBindTexture(GL_TEXTURE_2D, mat -> texture);
+    glm_vec3_copy(location, pos -> location);
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, calculate_mvp(cam, pos, mvp, width, height));
-    glDrawArrays(GL_TRIANGLES, mesh.first_vertex, mesh.max_vertex);
+    glDrawElements(GL_TRIANGLES, mesh.maxIndex, GL_UNSIGNED_INT, (void *)(mesh.firstIndex * sizeof(uint32_t)));
 }
 
 
